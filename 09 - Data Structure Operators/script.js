@@ -266,7 +266,7 @@ const restaurant = {
 
 //We used to values that are not booleans and it then returned a value.
 
-//OR Short circuiting means that if the first value is a truthy value it will immediately return that first value. So that the returned value is 3
+//OR Short circuiting means that if the first value is a truthy value it will immediately return that first value
 
 // console.log('----- OR -----');
 
