@@ -156,7 +156,7 @@ const book = lufthansa.book;
 //The book function is now just a regular function call, the this keyword points to undefined at least in strict mode. This function is no longer method of lufthansa book, it is now a separate function. The this keyword inside of it (lufthans book method) will now point to undefined
 // book(23, 'Rhaylie Reyes');
 
-//The first argument of call method is exactly what we want the this keyword point to and then as usual the rest of the arguments so the flightNumber and name value
+//The first argument of call method is exactly what we want the this keyword point to and then as usual the rest of the arguments is the flightNumber and name value
 book.call(euroWings, 230, 'Rhaylie Reyes');
 console.log(euroWings);
 
@@ -294,7 +294,7 @@ const h = function () {
   };
 };
 
-//Call the g function and the result of the function is that a will be 23
+//Call the g function and the result of the function is will be 23
 g();
 
 //This proves that the f value of g function really does close over any variables of the execution context in which it was defined

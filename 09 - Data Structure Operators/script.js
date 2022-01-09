@@ -291,7 +291,7 @@ const restaurant = {
 //AND Short circuiting means that if the first value is a falsy value it will immediately return that falsy value without evaluating the second operand. When both values are truthy it means that the evaluation continues and the last value is returned
 
 // console.log(0 && 'Kenneth'); //0
-// console.log(7 && 'Kenneth'); //Jonas
+// console.log(7 && 'Kenneth'); //Kenneth
 
 // console.log('Hello' && 23 && null && 'Kenneth');
 
@@ -393,7 +393,7 @@ const restaurant = {
 //Without optional chaining
 // console.log(restaurant.openingHours.mon.open);
 
-//With optional chaining operator. If a certain property does not exist the undefined is returned immediately
+//With optional chaining operator. If a certain property does not exist, the undefined is returned immediately
 // console.log(restaurant.openingHours.mon?.open);
 
 // console.log(restaurant.openingHours?.mon?.open);
@@ -425,8 +425,6 @@ const restaurant = {
 //     email: 'hello@joy.io',
 //   },
 // ];
-
-// const users = [];
 
 // console.log(users[0]?.name ?? 'User array empty');
 
@@ -658,8 +656,8 @@ console.log(airline.toUpperCase());
 
 //Fix Capitalization in name
 const passenger = 'kEnNetH'; //Kenneth
-const passengerLower = passenger.toLowerCase();
-const passengerCorrect = passengerLower[0].toUpperCase() + passengerLower.slice(1);
+const passengerLower = passenger.toLowerCase(); //kenneth
+const passengerCorrect = passengerLower[0].toUpperCase() + passengerLower.slice(1); //K + enneth = //Kenneth
 
 console.log(passengerCorrect);
 
@@ -721,7 +719,7 @@ checkBaggage('Got some snacks and a gun for a protection');
 
 //Working with String - Part 3
 
-//Split allows us to split a string into multiple parts based on a divider string
+//Split allows us to split a string into multiple parts based on a divider string and puts these in an array
 
 console.log('a+very+nice+string'.split('+'));
 console.log('Kenneth Sajo'.split(' '));
