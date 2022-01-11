@@ -2,7 +2,7 @@ console.log('--- SIMPLE ARRAY METHODS ---');
 
 let arr = ['a', 'b', 'c', 'd', 'e'];
 
-//SLICE - returns selected elements in an array, as a new array.
+//SLICE - returns selected elements in an array, as a new array. (SHALLOW COPY)
 console.log(arr.slice(2)); //['c', 'd', 'e']
 
 //can select from a given start, up to a (not inclusive) given end.
@@ -48,21 +48,23 @@ const arrNumbers = [23, 11, 64];
 console.log(arrNumbers[0]);
 
 //AT - method takes an integer value and returns the item at that index
-console.log(arrNumbers.at(1));
+console.log(arrNumbers.at(1)); //11
 
 //Getting the last element of an array using other method
-console.log(arrNumbers[arrNumbers.length - 1]);
+console.log(arrNumbers[arrNumbers.length - 1]); //64
 
-console.log(arrNumbers.slice(-2)[0]);
+console.log(arrNumbers.slice(-2)[0]); //returns [11, 64] but it will get the value of index 0 = 11
 
 //Getting the last element of an array using at method
-console.log(arrNumbers.at(-1));
+console.log(arrNumbers.at(-1)); //64
 
-console.log('Kenneth'.at(0));
+console.log('Kenneth'.at(0)); //K
 
 /////////////////////////////////////////////////
 
 console.log('--- Looping Arrays: forEach ---');
+
+//The forEach method does not create a new array, just loops over it
 
 // const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
