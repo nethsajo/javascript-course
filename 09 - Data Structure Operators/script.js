@@ -85,14 +85,15 @@ const restaurant = {
 //Destructuring Nested Array
 // const nested = [2, 4, [5, 6]];
 // const [i, , j] = nested;
+// console.log(i,j) //2 [5, 6]
 
 // console.log(i, j);
 // const [i, , [j, k]] = nested;
-// console.log(i, j, k);
+// console.log(i, j, k); //2 5 6
 
 //Default Values
 // const [p = 1, q = 1, r = 1] = [8];
-// console.log(p, q, r);
+// console.log(p, q, r); //8 1 1
 
 /////////////////////////////////
 
@@ -275,7 +276,7 @@ const restaurant = {
 // console.log(true || 0); //true
 // console.log(undefined || null); //null
 
-// console.log(undefined || 0 || '' || 'Hello' || 23 || null);
+// console.log(undefined || 0 || '' || 'Hello' || 23 || null); //Hello
 
 // restaurant.numGuests = 20;
 
@@ -439,7 +440,7 @@ const restaurant = {
 
 // console.log('----- Object Keys, Values and Entries -----');
 
-//Property Names
+//Property Keys
 // const properties = Object.keys(openingHours);
 // console.log(properties);
 
