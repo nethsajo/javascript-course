@@ -277,7 +277,7 @@ console.dir(booker);
 console.log('----- CLOSURE EXAMPLES -----');
 
 //Example 1
-let f; //
+let f;
 
 const g = function () {
   const a = 23;

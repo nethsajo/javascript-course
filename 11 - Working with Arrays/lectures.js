@@ -21,7 +21,7 @@ console.log([...arr]); //['a', 'b', 'c', 'd', 'e']
 //Delete one or more elements from an array using splice
 console.log(arr.splice(-1)); //['e']
 console.log(arr);
-console.log(arr.splice(1, 2)); //['a', 'd']
+console.log(arr.splice(1, 2)); //['a', 'd', 'e'] //Deleted c, b
 console.log(arr);
 
 //REVERSE - reveres the elements in an array in place. This method mutates the array and returns a reference to the same array
@@ -188,11 +188,24 @@ for (const move of movements) {
 console.log(balanceFor);
 
 //Maximum Value of movements using reduce
-const checkMaximumValue = movements.reduce((acc, current) => {
-  if (acc > current) return acc;
-  else return current;
-}, movements[0]);
-console.log(checkMaximumValue);
+// const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+// const checkMaximumValue = movements.reduce(
+//   (previous, current, index, array) => {
+//     if (previous > current) {
+//       console.log(
+//         `index: ${index}, previous: ${previous}, current: ${current}, returns: ${previous}`
+//       );
+//       return previous;
+//     } else {
+//       console.log(
+//         `index: ${index}, previous: ${previous}, current: ${current}, returns: ${current}`
+//       );
+//       return current;
+//     }
+//   },
+//   movements[0]
+// );
+// console.log(checkMaximumValue);
 
 /////////////////////////////////////////////////
 

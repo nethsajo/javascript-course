@@ -65,7 +65,7 @@ const restaurant = {
 
 // In the double commas, the second comma will skip the second part. So if you run it will show Italian Vegetarian
 // let [main, , secondary] = restaurant.categories;
-// console.log(main, secondary);
+// console.log(main, secondary); //Italian Vegetarian
 
 // const temp = main;
 // main = secondary;
@@ -753,8 +753,8 @@ console.log(message.padStart(25, '+').padEnd(30, '+'));
 console.log('Kenneth'.padStart(20, '+').padEnd(30, '+'));
 
 const maskedCreditCard = function (number) {
-  const str = number + '';
-  const last = str.slice(-4);
+  const str = number + ''; //this will convert the number into string
+  const last = str.slice(-4); //get the last 4 numbers
   return last.padStart(str.length, '*');
 };
 
@@ -763,7 +763,7 @@ console.log(maskedCreditCard(4444931517732861));
 console.log(maskedCreditCard('3355472900985135'));
 
 //Repeat Method
-const message2 = 'Bad weater... All Departures Delayed... ';
+const message2 = 'Bad weather... All Departures Delayed... ';
 console.log(message2.repeat(5));
 
 const planesInLine = function (n) {

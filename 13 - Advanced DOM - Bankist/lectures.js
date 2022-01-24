@@ -67,13 +67,13 @@ message.innerHTML =
 // header.prepend(message);
 
 //Append basically adds the element as the last child of this element (header)
-// header.append(message);
+header.append(message);
 
 //cloneNode - returns a copy of node. If deep is true, the copy also includes the node's descendants.
 // header.append(message.cloneNode(true));
 
 //before - inserts nodes just before node, while replacing strings in nodes with equivalent Text nodes.
-header.before(message);
+// header.before(message);
 
 //after - Inserts nodes just after node, while replacing strings in nodes with equivalent Text nodes.
 // header.after(message);
