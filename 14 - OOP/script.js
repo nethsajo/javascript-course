@@ -121,7 +121,7 @@ console.log(arr.unique());
 /////////////////////////////////////////////////////////////////////
 //ES6 Classes
 //class expression
-// const PersonClass = class {};
+// const PersonClass = class { //body class };
 
 //class declaration
 class PersonClass {
@@ -148,7 +148,7 @@ class PersonClass {
   set fullName(name) {
     console.log(name);
     if (name.includes(' '))
-      //Creates a new property name and the convention, so when we have a setter which is trying to set a property that does already exist then here as a convention we add an underscore
+      //Creates a new property name and the convention (_), so when we have a setter which is trying to set a property that does already exist then here as a convention we add an underscore
       this._fullName = name;
     else alert(`${name} is not a full name!`);
   }
@@ -467,8 +467,8 @@ pepper.calcAge();
 /////////////////////////////////////////////////////////////////////
 //Another Class Example with Data Privacy and Encapsulation
 
-//1. Public fields
-//2. Private fields
+//1. Public fields - a field as a property that will be on all instances
+//2. Private fields - a field are really truly properties not accessible from the outside
 //3. Public methods
 //4. Private methods
 // (there is also the static version)
@@ -484,9 +484,8 @@ class Account {
   constructor(owner, currency, pin) {
     this.owner = owner;
     this.currency = currency;
-    //Protected property
-    //This does not actually make the property truly private
-    // this._movements = [];
+    //Protected property - property that is not supposed to be touched outside of the class
+    // this._movements = []; //This does not actually make the property truly private, this is just only a convention
     this.#pin = pin;
     // this._movements = [];
     // this.locale = navigator.language;
@@ -496,6 +495,8 @@ class Account {
 
   //3. Public methods
   //Public interface
+
+  //If we still wanted to get access to the movements array from the outside then implement a public method or getter for that
   getMovements() {
     return this.#movements;
   }
@@ -525,15 +526,15 @@ class Account {
     }
   }
 
-  //Static methods will not be available on all the instances but only on the class itself
-  static helper() {
-    console.log('Helper');
-  }
-
   //4. Private methods
   // #approveLoan(val) {
   //   return true;
   // }
+
+  //Static methods will not be available on all the instances but only on the class itself
+  static helper() {
+    console.log('Helper');
+  }
 }
 
 const account1 = new Account('Kenneth', 'EUR', 1111);
