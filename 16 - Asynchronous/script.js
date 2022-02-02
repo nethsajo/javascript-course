@@ -143,9 +143,10 @@ const renderCountry = function (data, className = '') {
 
   countriesContainer.insertAdjacentHTML('beforeend', html);
 
-  // countriesContainer.style.opacity = 1;
+  countriesContainer.style.opacity = 1;
 };
 
+/*
 const getJSON = function (url, errorMessage = 'Something went wrong') {
   return fetch(url).then(response => {
     if (!response.ok) throw new Error(`${errorMessage} (${response.status})`);
@@ -182,8 +183,7 @@ const getCountryData = function (country) {
 btn.addEventListener('click', function () {
   getCountryData('portugal');
 });
-
-getCountryData('australia');
+*/
 
 /*Arrow Function
 const getCountryData = function (country) {
@@ -221,10 +221,248 @@ const getCountryData = function (country) {
 
 btn.addEventListener('click', function () {
   getCountryData('usa');
-});*/
+});
 
 // getCountryData('dsfddsfsdf');
 
 //////////////////////////////////////////////////////
 
-//Coding Challenge #1
+//Event loop
+
+//code outside of any callback will run first
+
+console.log('Test start');
+setTimeout(() => console.log('0 sec timer'), 0);
+
+//Promises are queue in micro-task
+//So the callback of the resolved promise will be put on the micro-tasks queue and the micro-tasks queue has priority over the callback queue. The one from the micro-tasks queue should be executed first
+Promise.resolve('Resolved promise 1').then(res => console.log(res));
+
+Promise.resolve('Resolved promise 2').then(res => {
+  for (let i = 0; i < 1000; i++) {}
+  console.log(res);
+});
+
+console.log('Test end');
+
+
+//////////////////////////////////////////////////////
+
+//Building a Simple Promise
+const lotteryPromise = new Promise(function (resolve, reject) {
+  console.log('Lottery draw is happening 🔮');
+  setTimeout(function () {
+    if (Math.random() >= 0.5) {
+      resolve('You win the lottery! 💰');
+    } else {
+      reject(new Error('You lost your money! 💸'));
+    }
+  }, 2000);
+});
+
+lotteryPromise
+  .then(res => console.log(res))
+  .catch(error => console.error(error));
+
+//Promisifying setTimeout
+const wait = function (seconds) {
+  return new Promise(function (resolve) {
+    setTimeout(resolve, seconds * 1000);
+  });
+};
+
+wait(1)
+  .then(() => {
+    console.log('1 second passed');
+    return wait(1);
+  })
+  .then(() => {
+    console.log('2 seconds passed');
+    return wait(1);
+  })
+  .then(() => {
+    console.log('3 seconds passed');
+    return wait(1);
+  })
+  .then(() => console.log('4 seconds passed'));
+
+//////////////////////////////////////////////////////
+
+//Promisifying the Geolocation API
+const getPosition = function () {
+  return new Promise(function (resolve, reject) {
+    // navigator.geolocation.getCurrentPosition(
+    //   position => resolve(position),
+    //   error => reject(error)
+    // );
+
+    navigator.geolocation.getCurrentPosition(resolve, reject);
+  });
+};
+
+getPosition()
+  .then(position => console.log(position))
+  .catch(`Can't get your position`);
+
+const getCountryData = function (country) {
+  fetch(`https://restcountries.com/v2/name/${country}?fullText=true`)
+    .then(response => {
+      if (!response.ok) throw new Error('Country not found!');
+      return response.json();
+    })
+    .then(data => renderCountry(data[0]))
+    .catch(error => {
+      renderError(`Something went wrong 💥💥💥 ${error.message}. Try again!`);
+    })
+    .finally(() => {
+      countriesContainer.style.opacity = 1;
+    });
+};
+
+const whereAmI = function () {
+  getPosition()
+    .then(position => {
+      const { latitude: lat, longitude: lng } = position.coords;
+
+      return fetch(
+        `https://us1.locationiq.com/v1/reverse.php?key=pk.8432b3dac8498ade8e8907be92b0b3f2&lat=${lat}&lon=${lng}&format=json`
+      );
+    })
+    .then(response => {
+      if (!response.ok)
+        throw new Error(`There's a problem with the API. ${response.status}`);
+      return response.json();
+    })
+    .then(data => {
+      console.log(`You are in ${data.address.city}, ${data.address.country}`);
+      getCountryData(data.address.country);
+    })
+    .catch(error =>
+      renderError(`Something went wrong 💥💥💥 ${error.message}. Try again!`)
+    );
+};
+
+btn.addEventListener('click', whereAmI);
+
+
+//////////////////////////////////////////////////////
+
+//Consuming Promises with Async/Await
+const getCountryData = async function (country) {
+  fetch(`https://restcountries.com/v2/name/${country}?fullText=true`)
+    .then(response => {
+      if (!response.ok) throw new Error('Country not found!');
+      return response.json();
+    })
+    .then(data => renderCountry(data[0]))
+    .catch(error => {
+      renderError(`Something went wrong 💥💥💥 ${error.message}. Try again!`);
+    })
+    .finally(() => {
+      countriesContainer.style.opacity = 1;
+    });
+};
+
+const getPosition = function () {
+  return new Promise(function (resolve, reject) {
+    navigator.geolocation.getCurrentPosition(resolve, reject);
+  });
+};
+
+//Same to this:
+//fetch(`https://restcountries.com/v2/name/${country}`).then(res => res.json());
+
+const whereAmI = async function () {
+  try {
+    const position = await getPosition();
+
+    const { latitude: lat, longitude: lng } = position.coords;
+
+    const resRevGeo = await fetch(
+      `https://us1.locationiq.com/v1/reverse.php?key=pk.8432b3dac8498ade8e8907be92b0b3f2&lat=${lat}&lon=${lng}&format=json`
+    );
+
+    if (!resRevGeo.ok) throw new Error('Problem getting location data');
+
+    const dataRes = await resRevGeo.json();
+    const country = dataRes.address.country;
+
+    const response = await fetch(
+      `https://restcountries.com/v2/name/${country}?fullText=true`
+    );
+
+    if (!response.ok) throw new Error('Problem getting country');
+    const data = await response.json();
+    renderCountry(data[0]);
+
+    return `You are in ${dataRes.address.city}, ${dataRes.address.country}`;
+  } catch (error) {
+    console.error(error);
+    renderError(`💥 ${error.message}`);
+
+    //Reject promise returned from async function
+
+    throw error;
+  }
+};
+
+console.log('1. Will get location');
+//Returning values from async functions
+// whereAmI()
+//   .then(city => console.log(`2. ${city}`))
+//   .catch(error => console.error(`2. ${error.message} 💥`))
+//   .finally(() => {
+//     console.log('3. Finished getting location');
+//   });
+
+(async function () {
+  try {
+    const result = await whereAmI();
+    console.log(result);
+  } catch (error) {
+    console.error(`2. ${error.message} 💥`);
+  }
+  console.log('3. Finished getting location');
+})();
+
+
+//////////////////////////////////////////////////////
+
+//Running Promises in Parallel
+const getJSON = function (url, errorMessage = 'Something went wrong') {
+  return fetch(url).then(response => {
+    if (!response.ok) throw new Error(`${errorMessage} (${response.status})`);
+
+    return response.json();
+  });
+};
+
+const get3Countries = async function (c1, c2, c3) {
+  try {
+    // const [data1] = await getJSON(`https://restcountries.com/v2/name/${c1}`);
+
+    // const [data2] = await getJSON(`https://restcountries.com/v2/name/${c2}`);
+
+    // const [data3] = await getJSON(`https://restcountries.com/v2/name/${c3}`);
+
+    // console.log([data1.capital, data2.capital, data3.capital]);
+
+    //Promise.all - receives an array and returns an array
+    const data = await Promise.all([
+      await getJSON(`https://restcountries.com/v2/name/${c1}`),
+      await getJSON(`https://restcountries.com/v2/name/${c2}`),
+      await getJSON(`https://restcountries.com/v2/name/${c3}`),
+    ]);
+
+    console.log(data.map(d => d[0].capital));
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+get3Countries('portugal', 'canada', 'tanzania');
+*/
+
+//////////////////////////////////////////////////////
+
+//Other Promise Combinators: race, allSettled, any

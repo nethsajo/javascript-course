@@ -3,6 +3,9 @@
 const btn = document.querySelector('.btn-country');
 const countriesContainer = document.querySelector('.countries');
 
+//////////////////////////////////////////////////////
+
+//Coding Challenge #1
 const renderError = function (message) {
   countriesContainer.insertAdjacentText('beforeend', message);
 };
