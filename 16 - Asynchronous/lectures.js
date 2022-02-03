@@ -37,9 +37,9 @@ getCountryData('philippines');
 const getCountryData = function (country) {
   //Returns the promise
   //The then method need to pass a callback function that want to be executed as soon as the promise is actually fulfilled. Takes a function argument that will receive one argument and that argument is the resulting value
-  fetch(`https://restcountries.com/v2/name/${country}`).then(function (
-    response
-  ) {
+
+  //Assume that the Promise will be fulfilled and a value available to work with. To handle the fulfilled state use the then method
+  fetch(`https://restcountries.com/v2/name/${country}`).then(response => {
     console.log(response);
     return response.json(); //A json method that is available on all the response objects that is coming from the fetch function
   });

@@ -51,11 +51,12 @@ const createImage = function (imgPath) {
 //Coding Challenge #3 - PART 2
 const loadAll = async function (imgArr) {
   try {
-    //Keep in mind createImage will return a promise so the callback function of map method needs to be special (async), need to consume the comes from the createImage
-    const imgs = imgArr.map(async img => await createImage(img));
-    const imgTag = await Promise.all(imgs);
-    console.log(imgTag); //Returns array of img tag[img, img, img]
-    imgTag.forEach(img => img.classList.add('parallel'));
+    //Keep in mind createImage will return a promise so the callback function of map method needs to be special (add async), need to consume the comes from the createImage
+    const imgs = imgArr.map(img => createImage(img));
+    const img = await Promise.all(imgs);
+    console.log(img); //[img, img, img]
+    //Loop the array and add class parallel
+    img.forEach(img => img.classList.add('parallel'));
   } catch (error) {
     console.error(error);
   }
