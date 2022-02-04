@@ -153,3 +153,119 @@ const getCountryData = function () {
 btn.addEventListener('click', function () {
   getCountryData('usa');
 });
+
+//The event loop in practice
+//Event loop
+
+//The top level of code or outside of any callback will run first
+
+console.log('Test start');
+setTimeout(() => console.log('0 sec timer'), 0);
+
+//Promises are queue in micro-task
+//So the callback of the resolved promise will be put on the micro-tasks queue and the micro-tasks queue has priority over the callback queue. The one from the micro-tasks queue should be executed first
+Promise.resolve('Resolved promise 1').then(res => console.log(res));
+
+Promise.resolve('Resolved promise 2').then(res => {
+  for (let i = 0; i < 1000; i++) {}
+  console.log(res);
+});
+
+console.log('Test end');
+
+//Synchronous
+//Test start
+//Test end
+
+//Asynchronous
+//Resolved promise 1
+//Resolved promise 2
+//0 sec timer
+
+//Promise constructor takes exactly one argument and that is so-called executor function.
+
+//As soon as the promise constructor runs it will automatically execute the executer function that we pass in and as it executes the function, it will do so by passing in two other arguments, and those arguments are the resolve and reject functions
+
+//All of this here we'll create a new promise that we're gonna store into the lotteryPromise variable
+const lotteryPromise = new Promise(function (resolve, reject) {
+  // if (Math.random() >= 0.5) {
+  //So basically calling the resolve function will mark this promise as a fulfilled promise which we can also say a resolved promise
+
+  //Into the resolved function here we pass the fulfilled value of the promise so that it can later be consumed with the then method. This will handle the results of this promise just like we handled any other promise with the then method
+  //   resolve('You WIN the lottery 💰');
+  // } else {
+  //In the reject we pass in the error message that later we want to be able in the catch handler/method
+  //   reject('You LOSE the lottery 💩');
+  // }
+
+  console.log('Lottery is happening! 🔮');
+  setTimeout(function () {
+    if (Math.random() >= 0.5) {
+      resolve('You WIN the lottery 💰');
+    } else {
+      reject(new Error('You LOSE the lottery 💩'));
+    }
+  }, 2000);
+});
+
+//Consume the promise
+lotteryPromise
+  .then(response => console.log(response))
+  .catch(error => console.error(error));
+
+const wait = function (seconds) {
+  return new Promise(resolve => setTimeout(resolve, seconds * 1000));
+};
+
+//This will now create a promise that will wait for 2 seconds and after these two seconds it will resolve
+
+//Then callback function in then method we are not going to receive any resolved value, so we just leave it empty and then simply log a message. So in the callback we could now run any code that we want to be executed after two seconds
+wait(2)
+  .then(() => {
+    console.log('I waited for 2 seconds');
+    return wait(1);
+  })
+  .then(() => {
+    console.log('I waited for 1 second');
+  });
+
+Promise.resolve('abc').then(x => console.log(x));
+Promise.reject(new Error('Problem!')).catch(err => console.error(err));
+
+//*
+navigator.geolocation.getCurrentPosition(
+  position => console.log(position),
+  error => console.error(error)
+);
+
+console.log('Getting position');
+
+const getPosition = function () {
+  return new Promise(function (resolve, reject) {
+    //*SAME ON THE ABOVE
+    navigator.geolocation.getCurrentPosition(resolve, reject);
+  });
+};
+
+const whereAmI = function () {
+  getPosition()
+    .then(position => {
+      const { latitude: lat, longitude: lng } = position.coords;
+
+      return fetch(
+        `https://us1.locationiq.com/v1/reverse.php?key=pk.8432b3dac8498ade8e8907be92b0b3f2&lat=${lat}&lon=${lng}&format=json`
+      );
+    })
+    .then(response => {
+      if (!response.ok)
+        throw new Error(`There's a problem with the API. ${response.status}`);
+      return response.json();
+    })
+    .then(data => {
+      console.log(`You are in ${data.address.city}, ${data.address.country}`);
+      getCountryData(data.address.country);
+    })
+    .catch(error =>
+      renderError(`Something went wrong 💥💥💥 ${error.message}. Try again!`)
+    );
+};
