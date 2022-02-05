@@ -467,8 +467,6 @@ get3Countries('portugal', 'canada', 'tanzania');
 
 //Other Promise Combinators: race, allSettled, any
 
-//Promise.race - receives an array of promises and it also returns a promise. This promise returned by Promise.race is settled as soon as one of the input promises settles. Settled simply means that a value is available. So basically the first settled promise wins the race
-
 const getJSON = function (url, errorMessage = 'Something went wrong') {
   return fetch(url).then(response => {
     if (!response.ok) throw new Error(`${errorMessage} (${response.status})`);
@@ -477,6 +475,7 @@ const getJSON = function (url, errorMessage = 'Something went wrong') {
   });
 };
 
+//Promise.race
 (async function () {
   const res = await Promise.race([
     getJSON(`https://restcountries.com/v2/name/italy`),
@@ -502,8 +501,7 @@ Promise.race([
   .then(res => console.log(res[0]))
   .catch(error => console.error(error));
 
-//Promise.allSettled - takes in an array of promises again and it will simply return an array of all the settled promises. No matter if the promises got rejected or not.
-
+//Promise.allSettled
 Promise.allSettled([
   Promise.resolve('Success'),
   Promise.reject('ERROR'),
@@ -519,7 +517,7 @@ Promise.all([
   .then(res => console.log(res))
   .catch(error => console.error(error));
 
-//Promise.any [ES2021] - takes in an array of multiple promises and this one will return the first fulfilled promise and it will simply ignore rejected promise. So therefore the Promise.any is always gonna be a fulfilled promise unless of course all of them reject
+//Promise.any
 Promise.any([
   Promise.resolve('Success'),
   Promise.reject('ERROR'),

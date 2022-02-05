@@ -219,7 +219,7 @@ const wait = function (seconds) {
 
 //This will now create a promise that will wait for 2 seconds and after these two seconds it will resolve
 
-//Then callback function in then method we are not going to receive any resolved value, so we just leave it empty and then simply log a message. So in the callback we could now run any code that we want to be executed after two seconds
+//Then callback function in the then method we are not going to receive any resolved value, so we just leave it empty and then simply log a message. So in the callback we could now run any code that we want to be executed after two seconds
 wait(2)
   .then(() => {
     console.log('I waited for 2 seconds');
@@ -269,3 +269,193 @@ const whereAmI = function () {
       renderError(`Something went wrong 💥💥💥 ${error.message}. Try again!`)
     );
 };
+
+//Consuming Promises with Async/Await
+
+//Async/Await is simply syntactic sugar over the then method in promises
+
+const whereAmILocated = async function () {
+  //Geolocation
+  const position = await getPosition();
+
+  const { latitude: lat, longitude: lng } = position.coords;
+
+  const resGeo = await fetch(
+    `https://us1.locationiq.com/v1/reverse.php?key=pk.8432b3dac8498ade8e8907be92b0b3f2&lat=${lat}&lon=${lng}&format=json`
+  );
+
+  const resGeoData = await resGeo.json();
+
+  const country = resGeoData.address.country;
+  // fetch(`https://restcountries.com/v2/name/${country}`).then(
+  //   response => response
+  // );
+
+  //fetch will return a promise and so in an async function like this, we can use the await keyword to basically await for the result of the promise. So basically await will stop decode execution at this point of the function until the promise is fulfilled or until the data has been fetched. Same code above:
+
+  //Country data
+  const response = await fetch(`https://restcountries.com/v2/name/${country}`);
+  const data = await response.json();
+  renderCountry(data[0]);
+};
+
+//Error handling in Async/Await
+
+const whereAmILocatedTwo = async function () {
+  try {
+    //Geolocation
+    const position = await getPosition();
+
+    const { latitude: lat, longitude: lng } = position.coords;
+
+    //Reverse Geocoding
+    const revGeo = await fetch(
+      `https://us1.locationiq.com/v1/reverse.php?key=pk.8432b3dac8498ade8e8907be92b0b3f2&lat=${lat}&lon=${lng}&format=json`
+    );
+
+    if (!revGeo.ok)
+      throw new Error(`Problem getting location data (${revGeo.status})`);
+
+    const revGeoData = await revGeo.json();
+
+    //Country Data
+    const response = await fetch(
+      `https://restcountries.com/v2/name/${revGeoData.address.country}`
+    );
+
+    if (!response.ok)
+      throw new Error(`Problem getting country (${response.status})`);
+
+    const data = await response.json();
+    renderCountry(data[0]);
+    //String that we want to return
+    return `You are in ${revGeoData.address.city}, ${
+      revGeoData.address.state
+    }, ${revGeoData.address.country_code.toUpperCase()}`;
+  } catch (error) {
+    console.error(error);
+    renderError(`${error.message}`);
+    //Reject promise returned from async funciton and rethrow errors
+    throw error;
+  }
+};
+
+//Async function runs in the background and so JavaScript immediately moves on the next line to print the logs. If it is a regular function and there would be a console.log in that regular function then that would be appear between the two logs but in the case it's an async function and so therefore it runs in the background until the results are there
+
+console.log('1. Will get location');
+whereAmILocatedTwo();
+console.log('3. Finished getting location');
+
+//Output
+//Will get location
+//Finished getting location
+//Location data
+
+//Async function always return a promise
+
+console.log('1. Will get location');
+//Return a data from the whereAmILocatedTwo function.
+
+//At this point JavaScript has simply no way of knowing yet the string that we want to returned from the whereAmILocatedTwo function because the function is still running but it is also not blocking the code out here and so therefore all that this function does return a promise
+
+//Now the value (string) that we return from an async function will become the fulfilled value of the promise that is returned by the function. The fulfilled value of the promise is going to be the string (You are in...) because that is the value that we return from the async function
+// const city = whereAmILocatedTwo();
+// console.log(city);
+
+//Consume promise and use the then method to get the fulfilled value.
+
+//The then method was called which in turn means that this promise was actually fulfilled and not rejected. So even though there was an error in the async function, the promise that the asyc function returns is still fulfilled and not rejected. If we add a catch handler and if we want to be able to catch the error then we would have to rethrow that error
+
+//Rethrowing the error means to basically throw the error again so that we can then propagate it down
+whereAmILocatedTwo()
+  .then(city => console.log(city))
+  .catch(error => console.error(`2: ${error.message}`))
+  .finally(() => console.log('3. Finished getting location'));
+
+//If we wanted to fix the three is printed before the two, we can simply add finally method
+
+//Convert to async/await using IIFE
+(async () => {
+  try {
+    const city = await whereAmILocatedTwo();
+    console.log(`2: ${city}`);
+  } catch (error) {
+    console.error(`2: ${error.message}`);
+  }
+  console.log('3. Finished getting location');
+})();
+
+//Running Promises in Parallel
+//Promise.all takes in an array of promises and it will return a new promise which will then run all the promises in the array at the same time
+
+//Promise.all if one of the promises rejects then the whole promis.all actually rejects as well. Promise.all short circuits when one promise rejects because one rejected promise is enough for the entire thing to reject as well
+const getThreeCountries = async function (c1, c2, c3) {
+  try {
+    const capital = await Promise.all([
+      getJSON(`https://restcountries.com/v2/name/${c1}`),
+      getJSON(`https://restcountries.com/v2/name/${c2}`),
+      getJSON(`https://restcountries.com/v2/name/${c3}`),
+    ]);
+
+    console.log(capital.map(data => data[0].capital));
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+getThreeCountries('portugal', 'usa', 'london');
+
+//Promise.race - receives an array of promises and it also returns a promise. This promise returned by Promise.race is settled as soon as one of the input promises settles.
+
+//Settled simply means that a value is available. So basically the first settled promise wins the race
+
+//These three promises will basically race against each other, like in a real race. If the winning promise is then a fulfilled promise, then the fulfillment value of this whole race promise is gonna be the fulfillment value of the winning promise. We only get one result and not an array of the results of all the three. A promise that gets rejected can actually also win the race.
+
+//Promise.race short circuits whenever one of the promises gets settled so that means no matter if fulfilled or rejected
+(async () => {
+  try {
+    const response = await Promise.race([
+      getJSON(`https://restcountries.com/v2/name/italy`),
+      getJSON(`https://restcountries.com/v2/name/egypt`),
+      getJSON(`https://restcountries.com/v2/name/mexico`),
+    ]);
+    console.log(response[0]);
+  } catch (error) {
+    console.log(error);
+  }
+})();
+
+const timeout = function (seconds) {
+  return new Promise(function (_, reject) {
+    setTimeout(function () {
+      reject(new Error('Request took too long!'));
+    }, seconds * 1000);
+  });
+};
+
+Promise.race([
+  getJSON(`https://restcountries.com/v2/name/tanzania`),
+  timeout(0.3),
+])
+  .then(response => console.log(response))
+  .catch(error => console.error(error));
+
+//Promise.allSettled - takes in an array of promises again and it will simply return an array of all the settled promises. No matter if the promises got rejected or not.
+
+Promise.allSettled([
+  Promise.resolve('Success'),
+  Promise.reject('Rejected'),
+  Promise.resolve('Another success!'),
+])
+  .then(response => console.log(response))
+  .catch(error => console.log(error));
+
+//Promise.any [ES2021] - takes in an array of multiple promises and this one will return the first fulfilled promise and it will simply ignore rejected promise. So therefore the Promise.any is always gonna be a fulfilled promise unless of course all of them reject
+
+Promise.any([
+  Promise.resolve('Success'),
+  Promise.reject('Rejected'),
+  Promise.resolve('Another success!'),
+])
+  .then(response => console.log(response))
+  .catch(error => console.log(error));
