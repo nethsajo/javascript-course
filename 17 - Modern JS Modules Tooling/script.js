@@ -84,7 +84,8 @@ console.log(ShoppingCart2);
 
 //////////////////////////////////////////////////////////////
 //Introduction to NPM
-import cloneDeep from './node_modules/lodash-es/cloneDeep.js';
+// import cloneDeep from './node_modules/lodash-es/cloneDeep.js';
+import cloneDeep from 'lodash-es';
 
 const state = {
   cart: [
@@ -101,3 +102,28 @@ state.user.loggedIn = false;
 console.log(stateClone);
 
 console.log(stateDeepClone);
+
+if (module.hot) {
+  module.hot.accept();
+}
+
+class Person {
+  greeting = 'Hey';
+
+  constructor(name) {
+    this.name = name;
+    console.log(`${this.greeting}, ${this.name}`);
+  }
+}
+
+const kenneth = new Person('Kenneth');
+
+console.log('Kenneth' ?? null);
+
+console.log(cart.find(element => element.quantity >= 2));
+Promise.resolve('TEST').then(data => console.log(data));
+
+import 'core-js/stable';
+
+//Polyfilling async functions
+import 'regenerator-runtime/runtime';

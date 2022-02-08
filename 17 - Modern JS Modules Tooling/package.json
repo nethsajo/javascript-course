@@ -1,17 +1,22 @@
 {
   "name": "17---modern-js-modules-tooling",
+  "browserslist": "> 0.5%, last 2 versions, not dead",
   "version": "1.0.0",
   "description": "",
-  "main": "script.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "parcel index.html",
+    "build": "parcel build index.html"
   },
   "author": "Jan Kenneth Sajo",
   "license": "ISC",
   "dependencies": {
-    "lodash-es": "^4.17.21"
+    "core-js": "^3.21.0",
+    "lodash-es": "^4.17.21",
+    "regenerator-runtime": "^0.13.9"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.16.11",
+    "npm": "^8.4.1",
     "parcel": "^2.2.1"
   }
 }
