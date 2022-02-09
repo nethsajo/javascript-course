@@ -74,3 +74,7 @@ export { totalPrice, totalQuantity as tq };
 //Pure function: Function without side effects. Does not depend on external variables. Given the same inputs, always returns the same outputs
 
 //Immutability: State (data) is never modified! Instead, state is copied and the copy is mutated and returned
+
+//Oject.freeze() - freezes an object. A frozen object can no longer be changed; freezing an object prevents new properties from being added to it, existing properties from being removed, prevents changing the enumerability, configurability, or writability of existing properties, and prevents the values of existing properties from being changed.
+
+//Object.freeze() - basically only freezes the first level of the object
