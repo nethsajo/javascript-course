@@ -52,3 +52,25 @@ export { totalPrice, totalQuantity as tq };
 
 //Top-level await (ES2022)
 //REMEMBER: Using top-level await, await outside of any async function will block the entire module in a way that we really couldn't block code execution before
+
+//Two fundamentally different ways of writing code (paradigms)
+
+//These two paradigms are: Imperative and Declarative code
+
+//Imperative - whenever we write imperative code, we basically need to explain to the computer how to do a certain things, so basically we need to explain every single step that the computer needs to follow in order to achieve a certain result
+
+//Example: Step-by-step recipe of a cake
+
+//Declarive - where we tells the computer only what to do. So when we write declarative code, we simply describe the way that the computer should achieve a certain result. But the how it should do it, so basically the step by step instructions
+
+//Example: Description of cake
+
+//Functional Programming - declarative programming paradigm
+
+//Based on the idea of writing software by combining many pure functions, avoiding side effects and mutating data
+
+//Side effect: Modications(mutation) of any data outside of the function (mutating external variables, logging to console, writing to DOM, etc.)
+
+//Pure function: Function without side effects. Does not depend on external variables. Given the same inputs, always returns the same outputs
+
+//Immutability: State (data) is never modified! Instead, state is copied and the copy is mutated and returned
